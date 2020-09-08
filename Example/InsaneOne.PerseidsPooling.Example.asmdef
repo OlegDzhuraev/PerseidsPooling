@@ -1,0 +1,15 @@
+{
+    "name": "InsaneOne.PerseidsPooling.Example",
+    "references": [
+        "GUID:cbffb590d1e98784cb89421edc62bc72"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

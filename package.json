@@ -1,0 +1,19 @@
+{
+    "name": "com.insaneone.perseidspooling",
+    "author": "InsaneOne",
+    "displayName": "PerseidsPooling",
+    "description": "Perseids Pooling is a simple object pooling implementation for Unity (C#) by InsaneOne. MIT License.",
+    "unity": "2019.1",
+    "version": "0.0.1",
+    "keywords": [
+        "perseidspooling",
+        "pooling",
+        "object pooling",
+        "insaneone"
+    ],
+    "dependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/InsaneOneHub/PerseidsPooling.git"
+    }
+}
