@@ -37,7 +37,7 @@ public class Damageable : MonoBehaviour, IResettable
 ## License
 MIT License
 
-## Donations
+## Donate
 You can support development using cryptocurrency :)
 
 **Zilliqa $ZIL (ZIL):** zil1p6j0js2d5dat36n9zpp4g9xj776vghukkaa32l
