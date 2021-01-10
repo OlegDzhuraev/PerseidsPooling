@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PerseidsPooling
@@ -6,51 +7,70 @@ namespace PerseidsPooling
 	/// <summary>Pool class allows pool objects and speed up spawn of new ones. </summary>
 	public static class Pool
 	{
-		static readonly List<PoolObject> poolableObjects = new List<PoolObject>();
+		static readonly Dictionary<int, List<PoolObject>> pools = new Dictionary<int, List<PoolObject>>();
 
-		/// <summary>Spawn object using pools. If same object is pooled, it will be re-activated, not instanced again.</summary>
+		/// <summary> Use this method to reset Pool on every scene reload. </summary>
+		public static void Reset() => pools.Clear();
+
+		/// <summary>Spawn object using pools. If same object already was pooled and inactive now, it will be re-activated, not instanced again.</summary>
 		public static GameObject Spawn(GameObject prefab)
 		{
-			GameObject spawnedObject = null;
+			var prefabHash = prefab.GetHashCode();
 
-			for (var i = 0; i < poolableObjects.Count; i++)
+			PoolObject poolObject = null;
+			
+			if (pools.ContainsKey(prefabHash))
 			{
-				var pooled = poolableObjects[i];
+				var pooledCollection = pools[prefabHash];
 
-				if (pooled.IsPooled && pooled.PrefabHash == prefab.GetHashCode())
+				for (var i = 0; i < pooledCollection.Count; i++)
 				{
-					pooled.Unpool();
-					spawnedObject = pooled.Instance;
-					break;
+					var comparePoolObject = pooledCollection[i];
+
+					if (comparePoolObject.IsPooled)
+					{
+						poolObject = comparePoolObject;
+						break;
+					}
+				}
+
+				if (poolObject == null)
+				{
+					poolObject = PoolObject.Create(prefab);
+					pooledCollection.Add(poolObject);
 				}
 			}
-
-			if (!spawnedObject)
+			else
 			{
-				var poolObject = PoolObject.Create(prefab);
-				spawnedObject = poolObject.Instance;
-
-				poolObject.Unpool();
-				
-				poolableObjects.Add(poolObject);
+				poolObject = PoolObject.Create(prefab);
+				pools.Add(prefabHash, new List<PoolObject> { poolObject });
 			}
 
-			return spawnedObject;
+			poolObject.Unpool();
+			
+			return poolObject.Instance;
 		}
 
 		/// <summary>Back object to the pool. Note that will work only with objects, which spawned by Pool.Spawn method. </summary>
 		public static void Back(GameObject instance)
 		{
-			for (var i = 0; i < poolableObjects.Count; i++)
+			foreach (var entry in pools)
 			{
-				var pooled = poolableObjects[i];
-
-				if (!pooled.IsPooled && pooled.Instance == instance)
+				var pool = entry.Value;
+				
+				for (var i = 0; i < pool.Count; i++)
 				{
-					pooled.Pool();
-					return;
+					var poolObject = pool[i];
+
+					if (!poolObject.IsPooled && poolObject.Instance == instance)
+					{
+						poolObject.Pool();
+						return;
+					}
 				}
 			}
+
+			throw new ArgumentException("This object was not added to the pool system.");
 		}
 
 		class PoolObject
