@@ -1,5 +1,5 @@
 # Perseids Pooling
-Perseids Pooling is a simple object pooling implementation for Unity.
+Perseids Pooling is a basic object pooling implementation for Unity.
 
 ## How to use?
 You can check **Example** folder, it will show you classic use case. 
@@ -13,7 +13,6 @@ It replaces GameObject.Instantiate, but only without arguments like position and
 
 To return object back to the pool:
 ```cs
-
 Pool.Back(instance); // you can use this code from any script, instance here is gameObject link, so it can be also Pool.Back(gameObject) etc.
 ```
 
@@ -24,12 +23,12 @@ You also need to implement IResettable in all of your MonoBehaviour components, 
 ```cs
 public class Damageable : MonoBehaviour, IResettable
 {
-  public float MaxHealth = 100;
-  public float Health;
+  [SerializeField] float maxHealth = 100;
+  [SerializeField] float health;
         
   void IResettable.ResetPooled()
   {
-    Health = MaxHealth;
+    health = maxHealth;
   }
 }
 ```
@@ -39,6 +38,13 @@ When scene changed, you need to call
 Pool.Reset();
 ```
 To clean already pooled objects.
+
+### Utilities ###
+There included some utilities which implements frequently used tools with pools.
+
+**DelayedPoolDestruction** - Simple timed destruction script, which returns object to a pool instead of destroying it.
+
+**PoolableParticleSystem** - Replays particle systems with Play on Awake enabled  after every unpooling of the object.
 
 ## License
 MIT License

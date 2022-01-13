@@ -1,13 +1,12 @@
-﻿using PerseidsPooling;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PerseidsPooling.Example
 {
-    public class Damageable : MonoBehaviour, IResettable
+    public class ExampleDamageable : MonoBehaviour, IResettable
     {
-        public float MaxHealth = 100;
-        public float Health;
-        public Renderer Renderer;
+        [SerializeField] float maxHealth = 100;
+        [SerializeField] float health;
+        [SerializeField] new Renderer renderer;
         
         static readonly int colorId = Shader.PropertyToID("_Color");
         
@@ -15,26 +14,26 @@ namespace PerseidsPooling.Example
         
         public void TakeDamage(float damage)
         {
-            Health -= damage;
+            health -= damage;
 
             UpdateColor();
             
-            if (Health < 0)
+            if (health < 0)
                 Die();
         }
 
         void UpdateColor()
         {
-            var healthColor = Color.Lerp(Color.red, Color.green, Health / MaxHealth);
+            var healthColor = Color.Lerp(Color.red, Color.green, health / maxHealth);
             
-            Renderer.material.SetColor(colorId, healthColor);
+            renderer.material.SetColor(colorId, healthColor);
         }
         
         void Die() => Pool.Back(gameObject);
 
         void IResettable.ResetPooled()
         {
-            Health = MaxHealth;
+            health = maxHealth;
             UpdateColor();
         }
     }

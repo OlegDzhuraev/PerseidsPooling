@@ -1,7 +1,8 @@
 {
     "name": "InsaneOne.PerseidsPooling.Example",
+    "rootNamespace": "",
     "references": [
-        "GUID:cbffb590d1e98784cb89421edc62bc72"
+        "GUID:595e91ee7fe166e488721ef5b3d014ef"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

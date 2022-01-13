@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2154951407177956210}
   - component: {fileID: 8077998358456563630}
   m_Layer: 0
-  m_Name: Damageable
+  m_Name: PoolExampleDamageable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,6 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -43,12 +44,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3933835463216267801}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbff8c1d597525b499db2e354fa33804, type: 3}
+  m_Script: {fileID: 11500000, guid: 67052155948350344869c0906a202ab4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 100
-  Health: 0
-  Renderer: {fileID: 2154951407177956210}
+  maxHealth: 100
+  health: 0
+  renderer: {fileID: 2154951407177956210}
 --- !u!33 &5571533959411825933
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -68,6 +69,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
