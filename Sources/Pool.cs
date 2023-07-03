@@ -61,7 +61,7 @@ namespace InsaneOne.PerseidsPooling
 				for (var i = 0; i < pool.Count; i++)
 				{
 					var poolObject = pool[i];
-
+					
 					if (!poolObject.IsPooled && poolObject.Instance == instance)
 					{
 						poolObject.Pool();
@@ -70,7 +70,7 @@ namespace InsaneOne.PerseidsPooling
 				}
 			}
 
-			throw new ArgumentException("This object was not added to the pool system.");
+			throw new ArgumentException("Perseids Pooling: This object was not added to the pool system.");
 		}
 
 		class PoolObject
@@ -91,6 +91,9 @@ namespace InsaneOne.PerseidsPooling
 			internal void Pool()
 			{
 				IsPooled = true;
+				
+				if (!Instance)
+					throw new NullReferenceException("Perseids Pooling: No pool object Instance found. Possible reasons: \n1. Not called Pool.Reset() on game start. \n2. This object was not added into the pool system (placed directly to scene, for example).\n3. Was destroyed by some other code.");
 
 				Instance.SetActive(false);
 			}
