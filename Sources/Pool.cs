@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PerseidsPooling
+namespace InsaneOne.PerseidsPooling
 {
 	/// <summary>Pool class allows pool objects and speed up spawn of new ones. </summary>
 	public static class Pool

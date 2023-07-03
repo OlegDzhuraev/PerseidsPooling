@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PerseidsPooling.Utils
+namespace InsaneOne.PerseidsPooling.Utils
 {
     public class PoolableParticleSystem : MonoBehaviour, IResettable
     {

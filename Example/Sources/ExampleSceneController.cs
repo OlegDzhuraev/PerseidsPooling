@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace PerseidsPooling.Example
+namespace InsaneOne.PerseidsPooling.Example
 {
     public class ExampleSceneController : MonoBehaviour
     {

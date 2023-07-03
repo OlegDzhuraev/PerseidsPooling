@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace InsaneOne.PerseidsPooling.Utils
+namespace InsaneOne.PerseidsPooling
 {
-	public class DelayedPoolDestruction : MonoBehaviour, IResettable
+	public sealed class DelayedPoolDestruction : MonoBehaviour, IResettable
 	{
-		[SerializeField, Min(0f)] float secondsToDestruction = 3f;
+		[SerializeField] [Range(0f, 1000f)] float secondsToDestruction = 3f;
 
 		float timeLeft;
 		
