@@ -44,7 +44,9 @@ There included some utilities which implements frequently used tools with pools.
 
 **DelayedPoolDestruction** - Simple timed destruction script, which returns object to a pool instead of destroying it.
 
-**PoolableParticleSystem** - Replays particle systems with Play on Awake enabled  after every unpooling of the object.
+**PoolableParticleSystem** - Replays particle systems with Play on Awake enabled after every unpooling of the object.
+
+**LightFxTimedPoolable** - Can be used to play simple light animation effect every time object being unpooled.
 
 ## License
 MIT License
