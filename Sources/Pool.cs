@@ -7,13 +7,21 @@ namespace InsaneOne.PerseidsPooling
 	/// <summary>Pool class allows pool objects and speed up spawn of new ones. </summary>
 	public static class Pool
 	{
+		public static bool AllowManualPooling { get; set; }
+		
 		static readonly Dictionary<int, List<PoolObject>> pools = new Dictionary<int, List<PoolObject>>();
 
 		/// <summary> Use this method to reset Pool on every scene reload. </summary>
 		public static void Reset() => pools.Clear();
 
-		/// <summary>Spawn object using pools. If same object already was pooled and inactive now, it will be re-activated, not instanced again.</summary>
-		public static GameObject Spawn(GameObject prefab)
+		/// <summary>Spawn object using pools. If same object already was pooled and inactive now,
+		/// it will be re-activated, not instanced again. </summary>
+		public static GameObject Spawn(GameObject prefab) => Spawn(prefab, true).Instance;
+
+		/// <summary>Spawn object using pools. If same object already was pooled and inactive now,
+		/// it will be re-activated, not instanced again.
+		/// <para>Set autoUnpool to false, if you want to do unpool manually after some object initialization.</para></summary>
+		public static PoolObject Spawn(GameObject prefab, bool autoUnpool)
 		{
 			var prefabHash = prefab.GetHashCode();
 
@@ -46,9 +54,10 @@ namespace InsaneOne.PerseidsPooling
 				pools.Add(prefabHash, new List<PoolObject> { poolObject });
 			}
 
-			poolObject.Unpool();
+			if (autoUnpool)
+				poolObject.Unpool();
 			
-			return poolObject.Instance;
+			return poolObject;
 		}
 
 		/// <summary>Back object to the pool. Note that will work only with objects, which spawned by Pool.Spawn method. </summary>
@@ -61,7 +70,7 @@ namespace InsaneOne.PerseidsPooling
 				for (var i = 0; i < pool.Count; i++)
 				{
 					var poolObject = pool[i];
-					
+
 					if (!poolObject.IsPooled && poolObject.Instance == instance)
 					{
 						poolObject.Pool();
@@ -70,44 +79,64 @@ namespace InsaneOne.PerseidsPooling
 				}
 			}
 
-			throw new ArgumentException("Perseids Pooling: This object was not added to the pool system.");
+			instance.SetActive(false);
+			throw new ArgumentException("This object was not added to the pool system. Disabling.");
 		}
 
-		class PoolObject
+		internal static void Log(string text) => Debug.Log($"[Perseids Pooling] {text}");
+	}
+	
+	public class PoolObject
+	{
+		public int PrefabHash { get; private set; }
+		public GameObject Instance { get; private set; }
+		public bool IsPooled { get; private set; }
+
+		IResettable[] resettables;
+
+		public static PoolObject Create(GameObject prefab)
 		{
-			public int PrefabHash { get; private set; }
-			public GameObject Instance { get; private set; }
-			public bool IsPooled { get; private set; }
-
-			public static PoolObject Create(GameObject prefab)
+			var po = new PoolObject
 			{
-				return new PoolObject
-				{
-					Instance = GameObject.Instantiate(prefab),
-					PrefabHash = prefab.GetHashCode()
-				};
-			}
+				Instance = GameObject.Instantiate(prefab),
+				PrefabHash = prefab.GetHashCode()
+			};
 			
-			internal void Pool()
-			{
-				IsPooled = true;
-				
-				if (!Instance)
-					throw new NullReferenceException("Perseids Pooling: No pool object Instance found. Possible reasons: \n1. Not called Pool.Reset() on game start. \n2. This object was not added into the pool system (placed directly to scene, for example).\n3. Was destroyed by some other code.");
+			po.resettables = po.Instance.GetComponents<IResettable>();
 
-				Instance.SetActive(false);
-			}
+			return po;
+		}
+			
+		internal void Pool()
+		{
+			IsPooled = true;
 
-			internal void Unpool()
-			{
-				IsPooled = false;
-				Instance.SetActive(true);
+			Instance.SetActive(false);
+		}
 
-				var resettables = Instance.GetComponents<IResettable>();
+		internal void Unpool()
+		{
+			IsPooled = false;
+			Instance.SetActive(true);
+			
+			for (var i = 0; i < resettables.Length; i++)
+				resettables[i].ResetPooled();
+		}
 
-				for (var i = 0; i < resettables.Length; i++)
-					resettables[i].ResetPooled();
-			}
+		public void ManualPool()
+		{
+			if (PerseidsPooling.Pool.AllowManualPooling)
+				Pool();
+			else
+				PerseidsPooling.Pool.Log("Manual pooling is not enabled!");
+		}
+		
+		public void ManualUnpool()
+		{
+			if (PerseidsPooling.Pool.AllowManualPooling)
+				Unpool();
+			else
+				PerseidsPooling.Pool.Log("Manual pooling is not enabled!");
 		}
 	}
 }

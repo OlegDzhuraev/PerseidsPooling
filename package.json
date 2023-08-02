@@ -4,7 +4,7 @@
     "displayName": "PerseidsPooling",
     "description": "Perseids Pooling is a simple object pooling implementation for Unity by Oleg Dzhuraev (InsaneOne). MIT License.",
     "unity": "2019.1",
-    "version": "0.1.2",
+    "version": "0.2.0",
     "keywords": [
         "perseidspooling",
         "pooling",
